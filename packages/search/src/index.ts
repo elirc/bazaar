@@ -64,6 +64,18 @@ export class EngineSearchService {
   }
 }
 
+export interface FallbackSearchPort { search(query: string): Promise<readonly SearchHit[]>; }
+export class ResilientSearchService {
+  constructor(private readonly engine: EngineSearchService, private readonly fallback: FallbackSearchPort) {}
+  async search(request: EngineSearchRequest) {
+    try {
+      return { degraded: false as const, engine: await this.engine.search(request) };
+    } catch {
+      return { degraded: true as const, fallback: await this.fallback.search(request.query) };
+    }
+  }
+}
+
 export type BrowseFilter =
   | { op: "price_between"; minimumCents: number; maximumCents: number }
   | { op: "collection_is"; handle: string }
