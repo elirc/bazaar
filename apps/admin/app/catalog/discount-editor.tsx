@@ -1,0 +1,3 @@
+export function DiscountEditor() {
+  return <section><h2>Promotions</h2><form><label>Code<input name="code" /></label><label>Type<select name="type"><option>percentage</option><option>fixed</option><option>BOGO</option><option>free shipping</option></select></label><label>Value<input min="0" name="value" type="number" /></label><fieldset><legend>Eligibility</legend><label>Minimum spend<input min="0" name="minimumSpend" type="number" /></label><label>Collections<input name="collections" /></label></fieldset><label>Usage limit<input min="1" name="usageLimit" type="number" /></label><button type="submit">Create promotion</button></form></section>;
+}

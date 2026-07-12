@@ -2,6 +2,7 @@ import { productRows, type AdminProduct } from "../src/catalog-admin";
 import { ProductEditor } from "./catalog/product-editor";
 import { CollectionEditor } from "./catalog/collection-editor";
 import { SearchMerchandising } from "./catalog/search-merchandising";
+import { DiscountEditor } from "./catalog/discount-editor";
 
 // Merchant decisions cannot tolerate a stale write-after-read, so this route is
 // intentionally dynamic even though the buyer-facing product page can be static.
@@ -48,6 +49,7 @@ export default function CatalogPage() {
       <ProductEditor />
       <CollectionEditor />
       <SearchMerchandising />
+      <DiscountEditor />
     </section>
   );
 }
