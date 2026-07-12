@@ -4,12 +4,22 @@ export interface CacheStore {
   delete(key: string): Promise<void>;
 }
 
+export interface CacheMetricSink {
+  record(event: "hit" | "miss" | "invalidation", amount?: number): void;
+}
+
+const noMetrics: CacheMetricSink = { record: () => undefined };
+
 export class ReadThroughCache {
-  constructor(private readonly store: CacheStore) {}
+  constructor(private readonly store: CacheStore, private readonly metrics: CacheMetricSink = noMetrics) {}
 
   async read<T>(key: string, ttlSeconds: number, load: () => Promise<T>): Promise<T> {
     const cached = await this.store.get<T>(key);
-    if (cached !== undefined) return cached;
+    if (cached !== undefined) {
+      this.metrics.record("hit");
+      return cached;
+    }
+    this.metrics.record("miss");
     const value = await load();
     await this.store.set(key, value, ttlSeconds);
     return value;
@@ -49,6 +59,7 @@ export class TaggedCache {
   constructor(
     private readonly cache: ReadThroughCache,
     private readonly tags: CacheTagIndex,
+    private readonly metrics: CacheMetricSink = noMetrics,
   ) {}
 
   async read<T>(key: string, entryTags: readonly string[], ttlSeconds: number, load: () => Promise<T>) {
@@ -66,6 +77,7 @@ export class TaggedCache {
       await this.cache.delete(key);
       await this.tags.detach(key);
     }));
+    this.metrics.record("invalidation", keys.size);
     return [...keys];
   }
 }
@@ -140,4 +152,16 @@ export function cacheKey(storeId: string, resource: "product" | "collection", id
 
 export function entityTag(resource: "product" | "collection", id: string) {
   return `${resource}:${id}`;
+}
+
+export class CacheMetrics implements CacheMetricSink {
+  readonly #counts = { hit: 0, miss: 0, invalidation: 0 };
+  record(event: "hit" | "miss" | "invalidation", amount = 1) { this.#counts[event] += amount; }
+  snapshot() {
+    const reads = this.#counts.hit + this.#counts.miss;
+    return {
+      ...this.#counts,
+      hitRate: reads === 0 ? 0 : this.#counts.hit / reads,
+    };
+  }
 }
