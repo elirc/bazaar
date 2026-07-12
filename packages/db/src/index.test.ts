@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
 
 import { InMemoryCatalogRepository } from "./index.js";
 
@@ -34,5 +35,11 @@ describe("catalog repository", () => {
     };
     await repository.createProduct(input);
     await expect(repository.createProduct(input)).rejects.toThrow("already exists");
+  });
+
+  it("ships indexes for audited browse and order predicates", () => {
+    const migration = readFileSync(new URL("../prisma/migrations/20260712213000_read_path_indexes/migration.sql", import.meta.url), "utf8");
+    expect(migration).toContain("Product_storeId_status_createdAt_idx");
+    expect(migration).toContain("OrderLine_orderId_variantId_idx");
   });
 });
