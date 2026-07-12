@@ -55,6 +55,21 @@ export class ReservationService {
   }
 }
 
+export function allocateAcrossLocations(items: readonly InventoryItem[], quantity: number) {
+  let remaining = quantity;
+  const allocations: Array<{ itemId: string; locationId: string; quantity: number }> = [];
+  const candidates = [...items].sort(
+    (left, right) => (right.onHand - right.reserved) - (left.onHand - left.reserved) || left.locationId.localeCompare(right.locationId),
+  );
+  for (const item of candidates) {
+    const allocated = Math.min(remaining, Math.max(0, item.onHand - item.reserved));
+    if (allocated > 0) allocations.push({ itemId: item.id, locationId: item.locationId, quantity: allocated });
+    remaining -= allocated;
+    if (remaining === 0) return allocations;
+  }
+  return undefined;
+}
+
 export class AtomicInventoryService {
   constructor(private readonly inventory: AtomicInventoryPort) {}
   reserve(itemId: string, quantity: number) {
