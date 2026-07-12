@@ -3,7 +3,7 @@
 | # | Planted in | What | Where | Harvested in | Status |
 |---|-----------|------|-------|--------------|--------|
 | 1 | S03 | Product page cached with no tag/dependency tracking — a price change doesn't invalidate the cached page | storefront cache | S06 (tag-based invalidation; stale-price test) | PLANTED S03 |
-| 2 | S05 | Cart totals recomputed on read with N+1 variant/price lookups | cart service | S12 (batch load + N+1 harvest; before/after) | planned |
+| 2 | S05 | Cart totals recomputed on read with N+1 variant/price lookups | cart service | S12 (batch load + N+1 harvest; before/after) | PLANTED S05 |
 | 3 | S05 | No cache stampede protection — a popular product's cache expiry sends a thundering herd to the DB | cache layer | S06 (single-flight/SWR) + S13 flash-sale evidence | planned |
 | 4 | S07 | Inventory decrement reads-then-writes without a lock/atomic guard (the deliberate oversell seed for the flagship arc) | inventory service | S07 itself (in-PR arc: the whole sprint fixes it) — plus S13 contention proof | planned |
 | 5 | S10 | Discount stacking has no combination guard — codes stack multiplicatively into negative/absurd totals | discount engine | S13 (abuse probe; stacking rules + floor) | planned |

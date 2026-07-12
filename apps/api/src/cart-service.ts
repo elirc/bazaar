@@ -19,3 +19,18 @@ export function updateCartLine(cart: Cart, lineId: string, quantity: number): Ca
 export function mergeCarts(guest: Cart, customer: Cart): Cart {
   return guest.lines.reduce<Cart>((merged, line) => addCartLine(merged, line), customer);
 }
+
+export interface VariantPriceReader {
+  findPriceCents(variantId: string): Promise<number>;
+}
+
+export async function calculateCartTotals(cart: Cart, prices: VariantPriceReader) {
+  let snapshotTotalCents = 0;
+  let currentTotalCents = 0;
+  for (const line of cart.lines) {
+    const currentPrice = await prices.findPriceCents(line.variantId);
+    snapshotTotalCents += line.priceSnapshotCents * line.quantity;
+    currentTotalCents += currentPrice * line.quantity;
+  }
+  return { snapshotTotalCents, currentTotalCents, priceChanged: snapshotTotalCents !== currentTotalCents };
+}
