@@ -69,3 +69,26 @@ export class TaggedCache {
     return [...keys];
   }
 }
+
+export class SingleFlight {
+  readonly #inFlight = new Map<string, Promise<unknown>>();
+
+  run<T>(key: string, load: () => Promise<T>): Promise<T> {
+    const existing = this.#inFlight.get(key) as Promise<T> | undefined;
+    if (existing) return existing;
+    const promise = load().finally(() => this.#inFlight.delete(key));
+    this.#inFlight.set(key, promise);
+    return promise;
+  }
+}
+
+export class ProtectedReadThroughCache {
+  constructor(
+    private readonly cache: ReadThroughCache,
+    private readonly singleFlight: SingleFlight,
+  ) {}
+
+  read<T>(key: string, ttlSeconds: number, load: () => Promise<T>) {
+    return this.cache.read(key, ttlSeconds, () => this.singleFlight.run(key, load));
+  }
+}
