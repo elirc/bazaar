@@ -14,8 +14,53 @@ export type Product = {
   description: string;
   priceCents: number;
   status: ProductStatus;
+  metaTitle?: string;
+  metaDescription?: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type ProductMedia = {
+  id: string;
+  productId: string;
+  kind: "image" | "video";
+  url: string;
+  altText: string;
+  position: number;
+};
+
+export type ProductOption = {
+  id: string;
+  productId: string;
+  name: string;
+  position: number;
+  values: readonly string[];
+};
+
+export type Variant = {
+  id: string;
+  productId: string;
+  sku: string;
+  priceCents: number;
+  /** One selected value per option name, for example `{ Size: "M", Color: "Blue" }`. */
+  selections: Readonly<Record<string, string>>;
+};
+
+export type SmartCollectionRule =
+  | { op: "all"; rules: readonly SmartCollectionRule[] }
+  | { op: "any"; rules: readonly SmartCollectionRule[] }
+  | { op: "title_contains"; value: string }
+  | { op: "price_between"; minimumCents: number; maximumCents: number }
+  | { op: "status_is"; value: ProductStatus };
+
+export type Collection = {
+  id: string;
+  storeId: string;
+  title: string;
+  handle: string;
+  kind: "manual" | "smart";
+  productIds: readonly string[];
+  rule?: SmartCollectionRule;
 };
 
 export type CreateProduct = Pick<
@@ -28,6 +73,13 @@ export interface CatalogRepository {
   createProduct(input: CreateProduct): Promise<Product>;
   listProducts(storeId: string): Promise<readonly Product[]>;
   findProductByHandle(storeId: string, handle: string): Promise<Product | undefined>;
+}
+
+export function variantIdentity(selections: Readonly<Record<string, string>>): string {
+  return Object.entries(selections)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([name, value]) => `${name}=${value}`)
+    .join("|");
 }
 
 type IdFactory = () => string;
@@ -88,3 +140,5 @@ export class InMemoryCatalogRepository implements CatalogRepository {
     return product ? structuredClone(product) : undefined;
   }
 }
+
+export { createCatalogSeed, type CatalogSeedProduct } from "./seed.js";
