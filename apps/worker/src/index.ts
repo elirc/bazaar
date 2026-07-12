@@ -22,3 +22,5 @@ export class BazaarWorker {
     await handler(job);
   }
 }
+
+export { CatalogIndexWorker, type CatalogSearchProjection } from "./catalog-indexer.js";

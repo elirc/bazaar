@@ -12,6 +12,7 @@
   "dependencies": {
     "@bazaar/db": "workspace:*",
     "@bazaar/shared": "workspace:*",
+    "@bazaar/search": "workspace:*",
     "fastify": "^5.0.0"
   },
   "devDependencies": { "typescript": "catalog:", "vitest": "catalog:" }

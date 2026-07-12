@@ -81,6 +81,9 @@ importers:
       '@bazaar/db':
         specifier: workspace:*
         version: link:../../packages/db
+      '@bazaar/search':
+        specifier: workspace:*
+        version: link:../../packages/search
       '@bazaar/shared':
         specifier: workspace:*
         version: link:../../packages/shared
