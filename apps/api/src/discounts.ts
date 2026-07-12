@@ -42,3 +42,14 @@ export function applyDiscounts(rules: readonly PriceRule[], cart: DiscountCart, 
   const discountCents = applied.reduce((sum, result) => sum + result.discountCents, 0);
   return { applied, discountCents, totalCents: cart.subtotalCents + cart.shippingCents - discountCents };
 }
+
+export interface DiscountUsagePort {
+  tryClaim(ruleId: string, customerId: string | undefined): Promise<boolean>;
+}
+
+export class DiscountUsageService {
+  constructor(private readonly usage: DiscountUsagePort) {}
+  claim(rule: PriceRule, customerId: string | undefined) {
+    return this.usage.tryClaim(rule.id, customerId);
+  }
+}

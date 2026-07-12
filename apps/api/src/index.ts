@@ -9,4 +9,4 @@ export { allocateAcrossLocations, AtomicInventoryService, NaiveInventoryService,
 export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutRecoveryPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
 export { MockPaymentProvider, PaymentWebhookHandler, signPaymentWebhook, verifyPaymentWebhook, type PaymentEventPort } from "./payments.js";
 export { transitionOrder } from "./order-state.js";
-export { applyDiscounts, evaluateDiscount, matchesDiscountCondition, type DiscountCart } from "./discounts.js";
+export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, type DiscountCart, type DiscountUsagePort } from "./discounts.js";
