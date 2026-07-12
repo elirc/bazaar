@@ -8,3 +8,4 @@ export { CatalogPublisher, type StorefrontRevalidator } from "./catalog-publishe
 export { allocateAcrossLocations, AtomicInventoryService, NaiveInventoryService, ReservationService, type AtomicInventoryPort, type InventoryReadWritePort, type ReservationPort } from "./inventory.js";
 export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutRecoveryPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
 export { MockPaymentProvider, PaymentWebhookHandler, signPaymentWebhook, verifyPaymentWebhook, type PaymentEventPort } from "./payments.js";
+export { transitionOrder } from "./order-state.js";
