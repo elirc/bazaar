@@ -140,3 +140,5 @@ export class InMemoryCatalogRepository implements CatalogRepository {
     return product ? structuredClone(product) : undefined;
   }
 }
+
+export { createCatalogSeed, type CatalogSeedProduct } from "./seed.js";
