@@ -11,4 +11,5 @@ export { MockPaymentProvider, PaymentWebhookHandler, signPaymentWebhook, verifyP
 export { transitionOrder } from "./order-state.js";
 export { FulfillmentService, type Fulfillment, type FulfillmentLine, type FulfillmentPort } from "./fulfillment.js";
 export { InventoryEffectService, type InventoryEffect, type InventoryEffectPort } from "./inventory-effects.js";
+export { MockRefundProvider, RefundService, type RefundProvider, type RefundResult } from "./refunds.js";
 export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, revalidateDiscountsAtCheckout, type DiscountCart, type DiscountUsagePort, type PromotionRulePort } from "./discounts.js";

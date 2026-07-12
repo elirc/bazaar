@@ -94,6 +94,17 @@ model Payment {
   amountCents      Int
   status           String
   order            Order @relation(fields: [orderId], references: [id])
+  refunds          Refund[]
+}
+
+model Refund {
+  id               String @id @default(cuid())
+  paymentId        String
+  providerRefundId String @unique
+  idempotencyKey   String @unique
+  amountCents      Int
+  status           String
+  payment          Payment @relation(fields: [paymentId], references: [id])
 }
 
 model CartLine {
