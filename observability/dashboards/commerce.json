@@ -1,0 +1,8 @@
+{
+  "title": "Bazaar Commerce Health",
+  "audiences": {
+    "storefront": ["request p50/p95", "cache hit ratio by layer", "LCP"],
+    "integrity": ["inventory drift units", "checkout success ratio", "payment failures", "order backlog"]
+  },
+  "links": ["checkout traces", "inventory reconciliation", "payment outage runbook"]
+}

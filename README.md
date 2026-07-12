@@ -32,3 +32,16 @@ pnpm gate
 
 The automated gate is intentionally infrastructure-free: teaching cores operate
 over injected ports and run against in-memory fakes.
+
+## v1 operations
+
+- [Architecture decisions](docs/adr)
+- [Sprint curriculum](docs/curriculum)
+- [Performance and security audits](docs/audits)
+- [Incident and restore runbooks](docs/runbooks)
+- [Deployment promotion gates](docs/deployment.md)
+- [v1 changelog](CHANGELOG.md)
+
+The repository's deterministic 10,000-attempt drills prove inventory, cache, and
+idempotency contracts without claiming distributed capacity. Use the checked-in
+k6 profiles against a named staging topology for latency and scaling evidence.

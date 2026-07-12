@@ -16,4 +16,5 @@ export { createWebhookSubscription, type MerchantWebhookSubscription } from "./m
 export { assertBoundedReadCount, loadOrderChildren, type OrderDetailBatchPort } from "./batched-reads.js";
 export { opaqueCustomerLookup, safeStorefrontCacheKey, type OpaqueLookup } from "./storefront-security.js";
 export { chargeQuotedAmount, createCurrencyQuote, type CurrencyChargePort, type CurrencyQuote } from "./currency-checkout.js";
+export { CheckoutDegradationService, type PaymentHealthPort, type PendingCheckoutPort } from "./degradation.js";
 export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, revalidateDiscountsAtCheckout, type DiscountCart, type DiscountUsagePort, type PromotionRulePort } from "./discounts.js";
