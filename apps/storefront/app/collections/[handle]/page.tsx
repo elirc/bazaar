@@ -7,6 +7,13 @@ export function generateStaticParams() {
   return [{ handle: "market-favorites" }];
 }
 
+export async function generateMetadata({ params }: { params: Promise<{ handle: string }> }) {
+  const { handle } = await params;
+  const title = handle.replaceAll("-", " ");
+  const canonical = `https://bazaar.example/collections/${handle}`;
+  return { title, description: `Shop ${title} at Bazaar.`, alternates: { canonical }, openGraph: { title, url: canonical, type: "website" as const } };
+}
+
 export default async function CollectionPage({
   params,
 }: {
