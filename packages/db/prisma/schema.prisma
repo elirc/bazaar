@@ -14,6 +14,22 @@ model Store {
   products Product[]
   collections Collection[]
   carts Cart[]
+  priceRules PriceRule[]
+}
+
+model PriceRule {
+  id         String @id @default(cuid())
+  storeId    String
+  code       String?
+  type       String
+  value      Int
+  conditions Json
+  usageLimit Int?
+  uses       Int @default(0)
+  startsAt   DateTime
+  endsAt     DateTime?
+  store      Store @relation(fields: [storeId], references: [id])
+  @@unique([storeId, code])
 }
 
 model Cart {

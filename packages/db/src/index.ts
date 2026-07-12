@@ -118,6 +118,25 @@ export type Payment = {
   status: "pending" | "succeeded" | "declined" | "refunded";
 };
 
+export type DiscountCondition =
+  | { op: "all" | "any"; conditions: readonly DiscountCondition[] }
+  | { op: "minimum_spend"; cents: number }
+  | { op: "product_in"; productIds: readonly string[] }
+  | { op: "collection_in"; handles: readonly string[] }
+  | { op: "customer_in"; customerIds: readonly string[] };
+
+export type PriceRule = {
+  id: string;
+  code?: string;
+  type: "fixed" | "percentage" | "bogo" | "free_shipping";
+  value: number;
+  conditions: DiscountCondition;
+  usageLimit?: number;
+  uses: number;
+  startsAt: Date;
+  endsAt?: Date;
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"
