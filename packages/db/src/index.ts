@@ -14,8 +14,19 @@ export type Product = {
   description: string;
   priceCents: number;
   status: ProductStatus;
+  metaTitle?: string;
+  metaDescription?: string;
   createdAt: Date;
   updatedAt: Date;
+};
+
+export type ProductMedia = {
+  id: string;
+  productId: string;
+  kind: "image" | "video";
+  url: string;
+  altText: string;
+  position: number;
 };
 
 export type ProductOption = {
