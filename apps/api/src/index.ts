@@ -7,3 +7,4 @@ export { addCartLine, updateCartLine, mergeCarts, calculateCartTotals, type Vari
 export { CatalogPublisher, type StorefrontRevalidator } from "./catalog-publisher.js";
 export { allocateAcrossLocations, AtomicInventoryService, NaiveInventoryService, ReservationService, type AtomicInventoryPort, type InventoryReadWritePort, type ReservationPort } from "./inventory.js";
 export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
+export { MockPaymentProvider, signPaymentWebhook, verifyPaymentWebhook } from "./payments.js";

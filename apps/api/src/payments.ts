@@ -1,0 +1,24 @@
+import { createHmac, timingSafeEqual } from "node:crypto";
+import type { ChargePort } from "./checkout.js";
+
+export class MockPaymentProvider implements ChargePort {
+  readonly #charges = new Map<string, { chargeId: string; status: "succeeded" | "declined" }>();
+  constructor(private readonly declineKeys = new Set<string>()) {}
+  async charge(input: { idempotencyKey?: string }) {
+    const key = input.idempotencyKey ?? crypto.randomUUID();
+    const existing = this.#charges.get(key);
+    if (existing) return existing;
+    const result = { chargeId: `mock_${this.#charges.size + 1}`, status: this.declineKeys.has(key) ? "declined" as const : "succeeded" as const };
+    this.#charges.set(key, result);
+    return result;
+  }
+}
+
+export const signPaymentWebhook = (body: string, secret: string) =>
+  createHmac("sha256", secret).update(body).digest("hex");
+
+export function verifyPaymentWebhook(body: string, signature: string, secret: string) {
+  const expected = Buffer.from(signPaymentWebhook(body, secret));
+  const received = Buffer.from(signature);
+  return expected.length === received.length && timingSafeEqual(expected, received);
+}
