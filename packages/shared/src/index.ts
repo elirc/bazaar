@@ -5,3 +5,4 @@ export { InMemoryCommerceTracer, type CommerceSpan, type CommerceSpanName, type 
 export { commerceHealth, commerceMetrics, type CommerceHealthInput } from "./commerce-metrics.js";
 export { PiiSafeErrorReporter, type CommerceErrorContext, type SentryLike } from "./error-reporting.js";
 export { checkoutSlo, evaluateCheckoutSlo, type CheckoutWindow } from "./slo.js";
+export { verifyRestore, type RestoreManifest } from "./restore.js";
