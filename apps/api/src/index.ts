@@ -15,4 +15,5 @@ export { MockRefundProvider, RefundService, type RefundProvider, type RefundResu
 export { createWebhookSubscription, type MerchantWebhookSubscription } from "./merchant-webhooks.js";
 export { assertBoundedReadCount, loadOrderChildren, type OrderDetailBatchPort } from "./batched-reads.js";
 export { opaqueCustomerLookup, safeStorefrontCacheKey, type OpaqueLookup } from "./storefront-security.js";
+export { chargeQuotedAmount, createCurrencyQuote, type CurrencyChargePort, type CurrencyQuote } from "./currency-checkout.js";
 export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, revalidateDiscountsAtCheckout, type DiscountCart, type DiscountUsagePort, type PromotionRulePort } from "./discounts.js";
