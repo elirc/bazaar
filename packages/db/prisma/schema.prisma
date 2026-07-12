@@ -112,7 +112,31 @@ model Variant {
   selections Json
   identity    String
   product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  inventory   InventoryItem[]
 
   @@unique([productId, sku])
   @@unique([productId, identity])
+}
+
+model InventoryItem {
+  id         String @id @default(cuid())
+  variantId  String
+  locationId String
+  onHand     Int
+  reserved   Int    @default(0)
+  variant    Variant @relation(fields: [variantId], references: [id])
+  reservations InventoryReservation[]
+
+  @@unique([variantId, locationId])
+}
+
+model InventoryReservation {
+  id              String @id @default(cuid())
+  inventoryItemId String
+  cartId          String
+  quantity        Int
+  status          String @default("active")
+  expiresAt       DateTime
+  inventoryItem   InventoryItem @relation(fields: [inventoryItemId], references: [id])
+  @@index([status, expiresAt])
 }
