@@ -1,0 +1,4 @@
+title = "Bazaar secret scanning"
+
+[extend]
+useDefault = true
