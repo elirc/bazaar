@@ -63,6 +63,22 @@ export type Collection = {
   rule?: SmartCollectionRule;
 };
 
+export type Cart = {
+  id: string;
+  storeId: string;
+  customerId?: string;
+  lines: readonly CartLine[];
+  updatedAt: Date;
+};
+
+export type CartLine = {
+  id: string;
+  variantId: string;
+  quantity: number;
+  /** Trust boundary: the amount shown when the buyer formed this cart intent. */
+  priceSnapshotCents: number;
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"

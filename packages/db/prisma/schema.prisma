@@ -13,6 +13,27 @@ model Store {
   handle   String    @unique
   products Product[]
   collections Collection[]
+  carts Cart[]
+}
+
+model Cart {
+  id         String     @id @default(cuid())
+  storeId    String
+  customerId String?
+  updatedAt  DateTime   @updatedAt
+  store      Store      @relation(fields: [storeId], references: [id])
+  lines      CartLine[]
+}
+
+model CartLine {
+  id                 String @id @default(cuid())
+  cartId             String
+  variantId          String
+  quantity           Int
+  priceSnapshotCents Int
+  cart               Cart   @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  @@unique([cartId, variantId])
 }
 
 model Product {

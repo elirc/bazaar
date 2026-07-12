@@ -6,6 +6,7 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "eslint app src --no-error-on-unmatched-pattern",
+    "start": "next start",
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc --noEmit"
   },
