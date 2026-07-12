@@ -98,7 +98,7 @@ export type InventoryReservation = {
   expiresAt: Date;
 };
 
-export type OrderStatus = "pending" | "paid" | "failed" | "cancelled" | "fulfilled";
+export type OrderStatus = "pending" | "paid" | "partially_fulfilled" | "fulfilled" | "delivered" | "failed" | "cancelled" | "refunded";
 export type Order = {
   id: string;
   cartId: string;

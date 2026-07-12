@@ -25,3 +25,4 @@ export class BazaarWorker {
 
 export { CatalogIndexWorker, ProductIndexer, SearchReconciler, type CatalogProjectionSource, type CatalogReconciliationSource, type CatalogSearchProjection, type SearchEngineProjection, type SearchEngineWriter } from "./catalog-indexer.js";
 export { ReservationExpiryWorker, type ReservationExpiryPort } from "./reservation-expiry.js";
+export { MerchantWebhookWorker, webhookSignature, type MerchantDelivery, type MerchantDeliveryPort } from "./merchant-webhooks.js";
