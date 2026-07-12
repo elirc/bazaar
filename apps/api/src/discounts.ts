@@ -29,3 +29,11 @@ export function evaluateDiscount(rule: PriceRule, cart: DiscountCart, now = new 
     case "bogo": return [...cart.itemPricesCents].sort((a, b) => a - b).filter((_, index) => index % 2 === 0).reduce((sum, price) => sum + price, 0);
   }
 }
+
+export function applyDiscounts(rules: readonly PriceRule[], cart: DiscountCart, now = new Date()) {
+  const applied = rules
+    .map((rule) => ({ ruleId: rule.id, discountCents: evaluateDiscount(rule, cart, now) }))
+    .filter((result) => result.discountCents > 0);
+  const discountCents = applied.reduce((sum, result) => sum + result.discountCents, 0);
+  return { applied, discountCents, totalCents: cart.subtotalCents + cart.shippingCents - discountCents };
+}
