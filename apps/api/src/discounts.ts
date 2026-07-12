@@ -21,7 +21,12 @@ export function matchesDiscountCondition(condition: DiscountCondition, cart: Dis
 }
 
 export function evaluateDiscount(rule: PriceRule, cart: DiscountCart, now = new Date()) {
-  if (now < rule.startsAt || (rule.endsAt && now > rule.endsAt) || !matchesDiscountCondition(rule.conditions, cart)) return 0;
+  if (
+    now < rule.startsAt ||
+    (rule.endsAt && now > rule.endsAt) ||
+    (rule.usageLimit !== undefined && rule.uses >= rule.usageLimit) ||
+    !matchesDiscountCondition(rule.conditions, cart)
+  ) return 0;
   switch (rule.type) {
     case "fixed": return Math.min(cart.subtotalCents, rule.value);
     case "percentage": return Math.round(cart.subtotalCents * rule.value / 10_000);
