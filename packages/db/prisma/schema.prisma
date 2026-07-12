@@ -23,6 +23,38 @@ model Cart {
   updatedAt  DateTime   @updatedAt
   store      Store      @relation(fields: [storeId], references: [id])
   lines      CartLine[]
+  orders     Order[]
+}
+
+model Order {
+  id             String @id @default(cuid())
+  cartId         String
+  idempotencyKey String @unique
+  status         String @default("pending")
+  totalCents     Int
+  currency       String
+  cart           Cart @relation(fields: [cartId], references: [id])
+  lines          OrderLine[]
+  payments       Payment[]
+}
+
+model OrderLine {
+  id             String @id @default(cuid())
+  orderId        String
+  variantId      String
+  quantity       Int
+  unitPriceCents Int
+  order          Order @relation(fields: [orderId], references: [id])
+}
+
+model Payment {
+  id               String @id @default(cuid())
+  orderId          String
+  providerChargeId String @unique
+  idempotencyKey   String @unique
+  amountCents      Int
+  status           String
+  order            Order @relation(fields: [orderId], references: [id])
 }
 
 model CartLine {
