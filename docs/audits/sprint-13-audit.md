@@ -27,3 +27,10 @@ environment drill for real infrastructure.
 
 Correctness thresholds are exact (no oversell, one load, one charge, nonnegative
 total). Latency is reported only by the k6 environment with its topology attached.
+
+## Inventory result
+
+The deterministic 10,000-attempt/100-unit contention test produced exactly 100
+successful atomic claims and zero oversell. A newly exposed reservation-write
+failure now compensates its stock claim, closing the TTL/persistence leak. This
+re-proves ledger flaw #4's correctness contract; it does not benchmark a hot row.

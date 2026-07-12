@@ -44,7 +44,14 @@ export class ReservationService {
       id: this.idFactory(), inventoryItemId: itemId, cartId, quantity,
       status: "active", expiresAt: new Date(this.now().getTime() + ttlMs),
     };
-    await this.reservations.create(reservation);
+    try {
+      await this.reservations.create(reservation);
+    } catch (error) {
+      // Reservation persistence and the stock claim normally share a database
+      // transaction. Ports without that facility must compensate immediately.
+      await this.inventory.release(itemId, quantity);
+      throw error;
+    }
     return reservation;
   }
 
