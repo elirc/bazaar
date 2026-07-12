@@ -14,6 +14,7 @@ export class ReadThroughCache {
     await this.store.set(key, value, ttlSeconds);
     return value;
   }
+  delete(key: string) { return this.store.delete(key); }
 }
 
 export class InMemoryCacheStore implements CacheStore {
@@ -54,5 +55,17 @@ export class TaggedCache {
     const value = await this.cache.read(key, ttlSeconds, load);
     await this.tags.attach(key, entryTags);
     return value;
+  }
+
+  async invalidate(tagsToInvalidate: readonly string[]) {
+    const keys = new Set<string>();
+    for (const tag of tagsToInvalidate) {
+      for (const key of await this.tags.keysFor(tag)) keys.add(key);
+    }
+    await Promise.all([...keys].map(async (key) => {
+      await this.cache.delete(key);
+      await this.tags.detach(key);
+    }));
+    return [...keys];
   }
 }
