@@ -37,6 +37,25 @@ export function browseCatalog(documents: readonly SearchDocument[], filters: rea
   return { results, facets: { collections: collectionCounts } };
 }
 
+export type SearchSort = "relevance" | "price_asc" | "price_desc" | "newest";
+
+export function sortAndPage(
+  hits: readonly SearchHit[],
+  sort: SearchSort,
+  afterId: string | undefined,
+  limit = 24,
+) {
+  const ordered = [...hits].sort((left, right) => {
+    if (sort === "price_asc") return left.priceCents - right.priceCents || left.id.localeCompare(right.id);
+    if (sort === "price_desc") return right.priceCents - left.priceCents || left.id.localeCompare(right.id);
+    if (sort === "newest") return right.createdAt.getTime() - left.createdAt.getTime() || left.id.localeCompare(right.id);
+    return right.score - left.score || left.id.localeCompare(right.id);
+  });
+  const start = afterId ? Math.max(0, ordered.findIndex((hit) => hit.id === afterId) + 1) : 0;
+  const items = ordered.slice(start, start + limit);
+  return { items, nextCursor: items.length === limit ? items.at(-1)?.id : undefined };
+}
+
 export function searchCatalog(
   documents: readonly SearchDocument[],
   query: string,
