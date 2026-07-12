@@ -11,6 +11,36 @@ export type SearchDocument = {
 
 export type SearchHit = SearchDocument & { score: number; snippet: string };
 
+export type EngineDocument = {
+  id: string;
+  title: string;
+  description: string;
+  priceCents: number;
+  collections: readonly string[];
+  optionValues: readonly string[];
+  available: boolean;
+  createdAtEpoch: number;
+};
+
+export const typesenseProductSchema = {
+  name: "products",
+  fields: [
+    { name: "title", type: "string" }, { name: "description", type: "string" },
+    { name: "priceCents", type: "int32", facet: true }, { name: "collections", type: "string[]", facet: true },
+    { name: "optionValues", type: "string[]", facet: true }, { name: "available", type: "bool", facet: true },
+    { name: "createdAtEpoch", type: "int64", sort: true },
+  ],
+} as const;
+
+export function toEngineDocument(document: SearchDocument): EngineDocument {
+  return {
+    id: document.id, title: document.title, description: document.description,
+    priceCents: document.priceCents, collections: document.collectionHandles,
+    optionValues: Object.entries(document.options).flatMap(([name, values]) => values.map((value) => `${name}:${value}`)),
+    available: document.available, createdAtEpoch: document.createdAt.getTime(),
+  };
+}
+
 export type BrowseFilter =
   | { op: "price_between"; minimumCents: number; maximumCents: number }
   | { op: "collection_is"; handle: string }
