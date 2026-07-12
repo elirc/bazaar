@@ -28,6 +28,7 @@ model PriceRule {
   uses       Int @default(0)
   startsAt   DateTime
   endsAt     DateTime?
+  combinable Boolean @default(false)
   store      Store @relation(fields: [storeId], references: [id])
   @@unique([storeId, code])
 }

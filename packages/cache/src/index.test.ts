@@ -47,6 +47,15 @@ describe("read-through cache", () => {
     expect(metrics.snapshot().miss).toBe(25);
   });
 
+  it("collapses a 10,000-reader flash-sale expiry to one origin load", async () => {
+    const load = vi.fn(async () => ({ stock: 100 }));
+    const cache = new ProtectedReadThroughCache(new ReadThroughCache(new InMemoryCacheStore()), new SingleFlight());
+    const results = await Promise.all(Array.from({ length: 10_000 }, () => cache.read("product:sale", 60, load)));
+    expect(load).toHaveBeenCalledTimes(1);
+    expect(results).toHaveLength(10_000);
+    expect(results.every(({ stock }) => stock === 100)).toBe(true);
+  });
+
   it("serves bounded stale data while refreshing in the background", async () => {
     let now = 0;
     let version = 0;

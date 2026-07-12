@@ -9,8 +9,13 @@ describe("promotions", () => {
   it("evaluates the closed eligibility AST with integer money", () => {
     expect(evaluateDiscount(rule("r1"), cart, new Date(1))).toBe(1000);
   });
-  it("documents the current unguarded stacking behavior", () => {
-    expect(applyDiscounts([rule("r1", 4000), rule("r2", 4000)], cart, new Date(1)).totalCents).toBe(-2500);
+  it("denies stacking by default and floors totals", () => {
+    expect(applyDiscounts([rule("r1", 4000), rule("r2", 4000)], cart, new Date(1)).totalCents).toBe(1500);
+    expect(applyDiscounts([{ ...rule("r1", 4000), combinable: true }, { ...rule("r2", 4000), combinable: true }], cart, new Date(1)).totalCents).toBe(0);
+  });
+  it("rejects anonymous claims for usage-limited promotions", async () => {
+    const service = new DiscountUsageService({ tryClaim: async () => true });
+    await expect(service.claim({ ...rule("limited"), usageLimit: 1 }, undefined)).resolves.toBe(false);
   });
   it("claims at most the configured concurrent usage count", async () => {
     let uses = 0;

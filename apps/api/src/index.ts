@@ -6,7 +6,7 @@ export { SearchService } from "./search-service.js";
 export { addCartLine, updateCartLine, mergeCarts, calculateCartTotals, type VariantPriceReader } from "./cart-service.js";
 export { CatalogPublisher, type StorefrontRevalidator } from "./catalog-publisher.js";
 export { allocateAcrossLocations, AtomicInventoryService, NaiveInventoryService, ReservationService, type AtomicInventoryPort, type InventoryReadWritePort, type ReservationPort } from "./inventory.js";
-export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutRecoveryPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
+export { AuthoritativeCheckoutService, IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutRecoveryPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
 export { MockPaymentProvider, PaymentWebhookHandler, signPaymentWebhook, verifyPaymentWebhook, type PaymentEventPort } from "./payments.js";
 export { transitionOrder } from "./order-state.js";
 export { FulfillmentService, type Fulfillment, type FulfillmentLine, type FulfillmentPort } from "./fulfillment.js";
@@ -14,4 +14,5 @@ export { InventoryEffectService, type InventoryEffect, type InventoryEffectPort 
 export { MockRefundProvider, RefundService, type RefundProvider, type RefundResult } from "./refunds.js";
 export { createWebhookSubscription, type MerchantWebhookSubscription } from "./merchant-webhooks.js";
 export { assertBoundedReadCount, loadOrderChildren, type OrderDetailBatchPort } from "./batched-reads.js";
+export { opaqueCustomerLookup, safeStorefrontCacheKey, type OpaqueLookup } from "./storefront-security.js";
 export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, revalidateDiscountsAtCheckout, type DiscountCart, type DiscountUsagePort, type PromotionRulePort } from "./discounts.js";

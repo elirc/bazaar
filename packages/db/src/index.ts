@@ -135,6 +135,7 @@ export type PriceRule = {
   uses: number;
   startsAt: Date;
   endsAt?: Date;
+  combinable?: boolean;
 };
 
 export type CreateProduct = Pick<

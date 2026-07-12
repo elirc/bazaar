@@ -1,0 +1,1 @@
+ALTER TABLE "PriceRule" ADD COLUMN "combinable" BOOLEAN NOT NULL DEFAULT false;

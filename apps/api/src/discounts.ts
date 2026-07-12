@@ -35,12 +35,19 @@ export function evaluateDiscount(rule: PriceRule, cart: DiscountCart, now = new 
   }
 }
 
-export function applyDiscounts(rules: readonly PriceRule[], cart: DiscountCart, now = new Date()) {
-  const applied = rules
-    .map((rule) => ({ ruleId: rule.id, discountCents: evaluateDiscount(rule, cart, now) }))
+export function applyDiscounts(rules: readonly PriceRule[], cart: DiscountCart, now = new Date(), minimumTotalCents = 0) {
+  const eligible = rules
+    .map((rule) => ({ rule, ruleId: rule.id, discountCents: evaluateDiscount(rule, cart, now) }))
     .filter((result) => result.discountCents > 0);
+  const applied: Array<{ ruleId: string; discountCents: number }> = [];
+  for (const candidate of eligible) {
+    const previousCombine = applied.every(({ ruleId }) => rules.find((rule) => rule.id === ruleId)?.combinable === true);
+    if (applied.length === 0 || (candidate.rule.combinable === true && previousCombine)) {
+      applied.push({ ruleId: candidate.ruleId, discountCents: candidate.discountCents });
+    }
+  }
   const discountCents = applied.reduce((sum, result) => sum + result.discountCents, 0);
-  return { applied, discountCents, totalCents: cart.subtotalCents + cart.shippingCents - discountCents };
+  return { applied, discountCents, totalCents: Math.max(minimumTotalCents, cart.subtotalCents + cart.shippingCents - discountCents) };
 }
 
 export interface DiscountUsagePort {
@@ -50,6 +57,7 @@ export interface DiscountUsagePort {
 export class DiscountUsageService {
   constructor(private readonly usage: DiscountUsagePort) {}
   claim(rule: PriceRule, customerId: string | undefined) {
+    if (rule.usageLimit !== undefined && !customerId) return Promise.resolve(false);
     return this.usage.tryClaim(rule.id, customerId);
   }
 }

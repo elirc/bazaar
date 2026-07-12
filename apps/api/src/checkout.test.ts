@@ -1,6 +1,6 @@
 import type { Cart, Order } from "@bazaar/db";
 import { describe, expect, it, vi } from "vitest";
-import { IdempotentCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type IdempotentOrderPort } from "./checkout.js";
+import { AuthoritativeCheckoutService, IdempotentCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type IdempotentOrderPort } from "./checkout.js";
 
 class MemoryCheckout implements CheckoutOrderPort, IdempotentOrderPort, ChargePort {
   orders: Order[] = [];
@@ -35,6 +35,18 @@ describe("checkout idempotency", () => {
       currentPriceCents: async () => 2600,
       reservationActive: async () => true,
     })).rejects.toThrow("Price changed");
+  });
+
+  it("rejects a client-tampered price before order or charge creation", async () => {
+    const memory = new MemoryCheckout();
+    const subject = new AuthoritativeCheckoutService(memory, memory, () => "order", {
+      currentPriceCents: async () => 2400,
+      reservationActive: async () => true,
+    });
+    const tampered = { ...cart, lines: [{ ...cart.lines[0]!, priceSnapshotCents: 1 }] };
+    await expect(subject.checkout(tampered, "tamper")).rejects.toThrow("Price changed");
+    expect(memory.orders).toHaveLength(0);
+    expect(memory.charges).toHaveLength(0);
   });
 
   it("decline fails the order, releases stock, and leaves cart recovery to the caller", async () => {
