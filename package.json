@@ -13,7 +13,8 @@
     "lint": "turbo run lint",
     "test": "turbo run test",
     "typecheck": "turbo run typecheck",
-    "gate": "pnpm run lint && pnpm run typecheck && turbo run test build"
+    "gate": "pnpm run lint && pnpm run typecheck && turbo run test build",
+    "performance:gate": "node scripts/cache-performance-gate.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^9.0.0",
