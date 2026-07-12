@@ -4,6 +4,7 @@ import { CollectionEditor } from "./catalog/collection-editor";
 import { SearchMerchandising } from "./catalog/search-merchandising";
 import { DiscountEditor } from "./catalog/discount-editor";
 import { OrderDetail } from "./orders/order-detail";
+import { WebhookManager } from "./webhooks/webhook-manager";
 
 // Merchant decisions cannot tolerate a stale write-after-read, so this route is
 // intentionally dynamic even though the buyer-facing product page can be static.
@@ -59,6 +60,7 @@ export default function CatalogPage() {
         currency: "USD",
         events: [{ id: "evt_1", orderId: "ord_demo", kind: "status", message: "Payment captured", occurredAt: "2026-07-12T18:00:00Z" }],
       }} />
+      <WebhookManager deliveries={[{ id: "delivery_demo", event: "order.paid", destination: "https://merchant.example/hooks", status: "delivered", attempts: 1, lastAttemptAt: "2026-07-12T18:00:02Z" }]} />
     </section>
   );
 }
