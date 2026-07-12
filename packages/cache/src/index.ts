@@ -92,3 +92,44 @@ export class ProtectedReadThroughCache {
     return this.cache.read(key, ttlSeconds, () => this.singleFlight.run(key, load));
   }
 }
+
+export type StaleEntry<T> = { value: T; freshUntil: number; staleUntil: number };
+export interface StaleEntryStore {
+  get<T>(key: string): Promise<StaleEntry<T> | undefined>;
+  set<T>(key: string, entry: StaleEntry<T>): Promise<void>;
+}
+
+export class StaleWhileRevalidateCache {
+  constructor(
+    private readonly store: StaleEntryStore,
+    private readonly singleFlight: SingleFlight,
+    private readonly now: () => number = Date.now,
+  ) {}
+
+  async read<T>(key: string, freshSeconds: number, staleSeconds: number, load: () => Promise<T>) {
+    const entry = await this.store.get<T>(key);
+    const now = this.now();
+    if (entry && now < entry.freshUntil) return entry.value;
+    const refresh = async () => {
+      const value = await load();
+      const refreshedAt = this.now();
+      await this.store.set(key, {
+        value,
+        freshUntil: refreshedAt + freshSeconds * 1000,
+        staleUntil: refreshedAt + (freshSeconds + staleSeconds) * 1000,
+      });
+      return value;
+    };
+    if (entry && now < entry.staleUntil) {
+      void this.singleFlight.run(key, refresh).catch(() => undefined);
+      return entry.value;
+    }
+    return this.singleFlight.run(key, refresh);
+  }
+}
+
+export class InMemoryStaleEntryStore implements StaleEntryStore {
+  readonly #entries = new Map<string, StaleEntry<unknown>>();
+  async get<T>(key: string) { return this.#entries.get(key) as StaleEntry<T> | undefined; }
+  async set<T>(key: string, entry: StaleEntry<T>) { this.#entries.set(key, entry); }
+}
