@@ -23,5 +23,5 @@ export class BazaarWorker {
   }
 }
 
-export { CatalogIndexWorker, type CatalogSearchProjection } from "./catalog-indexer.js";
+export { CatalogIndexWorker, ProductIndexer, type CatalogProjectionSource, type CatalogSearchProjection, type SearchEngineWriter } from "./catalog-indexer.js";
 export { ReservationExpiryWorker, type ReservationExpiryPort } from "./reservation-expiry.js";
