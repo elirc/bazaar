@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
+import { AddToCart } from "./add-to-cart";
 
 // Buyers receive static speed while the catalog refreshes within the documented
 // 60-second tolerance. Transactional price truth still belongs to checkout.
@@ -36,6 +37,7 @@ export default async function ProductPage({
       <h1>{view.title}</h1>
       <p>{view.description}</p>
       <strong>{view.formattedPrice}</strong>
+      <AddToCart handle={view.handle} />
     </article>
   );
 }
