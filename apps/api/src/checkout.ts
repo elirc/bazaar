@@ -70,6 +70,26 @@ export class IdempotentCheckoutService {
   }
 }
 
+export class AuthoritativeCheckoutService {
+  readonly #checkout: IdempotentCheckoutService;
+
+  constructor(
+    orders: IdempotentOrderPort,
+    payments: ChargePort,
+    idFactory: () => string,
+    private readonly validation: CheckoutValidationPort,
+  ) {
+    this.#checkout = new IdempotentCheckoutService(orders, payments, idFactory);
+  }
+
+  async checkout(cart: Cart, requestKey: string) {
+    // The client submits identity and quantity, never an accepted amount. Every
+    // price and reservation is reloaded before the idempotent money boundary.
+    await revalidateCheckout(cart, this.validation);
+    return this.#checkout.checkout(cart, requestKey);
+  }
+}
+
 export interface CheckoutRecoveryPort {
   markPaid(orderId: string): Promise<void>;
   markFailed(orderId: string): Promise<void>;
