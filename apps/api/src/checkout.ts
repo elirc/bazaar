@@ -69,3 +69,23 @@ export class IdempotentCheckoutService {
     return { order: result.order, charge, replayed: false };
   }
 }
+
+export interface CheckoutRecoveryPort {
+  markPaid(orderId: string): Promise<void>;
+  markFailed(orderId: string): Promise<void>;
+  releaseReservations(cartId: string): Promise<void>;
+}
+
+export async function settleCheckout(
+  order: Order,
+  charge: { status: "succeeded" | "declined" },
+  recovery: CheckoutRecoveryPort,
+) {
+  if (charge.status === "succeeded") {
+    await recovery.markPaid(order.id);
+    return "paid" as const;
+  }
+  await recovery.markFailed(order.id);
+  await recovery.releaseReservations(order.cartId);
+  return "failed" as const;
+}
