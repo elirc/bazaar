@@ -9,6 +9,6 @@
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc --noEmit"
   },
-  "dependencies": { "@bazaar/shared": "workspace:*" },
+  "dependencies": { "@bazaar/db": "workspace:*", "@bazaar/shared": "workspace:*" },
   "devDependencies": { "typescript": "catalog:", "vitest": "catalog:" }
 }
