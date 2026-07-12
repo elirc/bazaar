@@ -11,6 +11,32 @@ export type SearchDocument = {
 
 export type SearchHit = SearchDocument & { score: number; snippet: string };
 
+export type BrowseFilter =
+  | { op: "price_between"; minimumCents: number; maximumCents: number }
+  | { op: "collection_is"; handle: string }
+  | { op: "option_has"; name: string; value: string }
+  | { op: "available_is"; value: boolean };
+
+function matchesFilter(document: SearchDocument, filter: BrowseFilter): boolean {
+  switch (filter.op) {
+    case "price_between": return document.priceCents >= filter.minimumCents && document.priceCents <= filter.maximumCents;
+    case "collection_is": return document.collectionHandles.includes(filter.handle);
+    case "option_has": return document.options[filter.name]?.includes(filter.value) ?? false;
+    case "available_is": return document.available === filter.value;
+  }
+}
+
+export function browseCatalog(documents: readonly SearchDocument[], filters: readonly BrowseFilter[]) {
+  const results = documents.filter((document) => filters.every((filter) => matchesFilter(document, filter)));
+  const collectionCounts = new Map<string, number>();
+  for (const document of results) {
+    for (const handle of document.collectionHandles) {
+      collectionCounts.set(handle, (collectionCounts.get(handle) ?? 0) + 1);
+    }
+  }
+  return { results, facets: { collections: collectionCounts } };
+}
+
 export function searchCatalog(
   documents: readonly SearchDocument[],
   query: string,
