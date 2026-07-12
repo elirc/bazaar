@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
 import { AddToCart } from "./add-to-cart";
@@ -35,6 +36,14 @@ export default async function ProductPage({
     <article>
       <p>Storefront read model</p>
       <h1>{view.title}</h1>
+      <Image
+        alt={`${view.title} product view`}
+        height={1200}
+        priority
+        sizes="(max-width: 768px) 100vw, 50vw"
+        src="/product-placeholder.svg"
+        width={1200}
+      />
       <p>{view.description}</p>
       <strong>{view.formattedPrice}</strong>
       <AddToCart handle={view.handle} />
