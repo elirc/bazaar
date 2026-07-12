@@ -34,3 +34,10 @@ The deterministic 10,000-attempt/100-unit contention test produced exactly 100
 successful atomic claims and zero oversell. A newly exposed reservation-write
 failure now compensates its stock claim, closing the TTL/persistence leak. This
 re-proves ledger flaw #4's correctness contract; it does not benchmark a hot row.
+
+## Cache result
+
+At a simultaneous local expiry, 10,000 readers joined one single-flight origin
+load and received the same value. The sale key is also eligible for Sprint 12 hot
+set warming. This supplies the promised second proof for ledger flaw #3 while
+remaining a contract test, not Redis/network capacity evidence.
