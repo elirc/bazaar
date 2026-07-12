@@ -9,6 +9,8 @@ import {
   SingleFlight,
   StaleWhileRevalidateCache,
   TaggedCache,
+  HotSetWarmer,
+  normalizedQueryKey,
 } from "./index.js";
 
 describe("read-through cache", () => {
@@ -58,5 +60,19 @@ describe("read-through cache", () => {
     expect(await cache.read("p1", 1, 5, async () => ++version)).toBe(1);
     await vi.waitFor(() => expect(version).toBe(2));
     expect(await cache.read("p1", 1, 5, async () => ++version)).toBe(2);
+  });
+
+  it("warms only the traffic-ranked head", async () => {
+    const warm = vi.fn(async () => undefined);
+    const resources = Array.from({ length: 60 }, (_, index) => ({ key: `p${index}`, score: index }));
+    const warmed = await new HotSetWarmer(warm, 50).deploy(resources);
+    expect(warmed).toHaveLength(50);
+    expect(warmed[0]).toBe("p59");
+    expect(warm).toHaveBeenCalledTimes(50);
+  });
+
+  it("normalizes equivalent search query key order", () => {
+    expect(normalizedQueryKey("s1", new URLSearchParams("q=tote&page=2")))
+      .toBe(normalizedQueryKey("s1", new URLSearchParams("page=2&q=tote")));
   });
 });

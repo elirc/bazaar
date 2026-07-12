@@ -1,8 +1,10 @@
+import Link from "next/link";
+
 export default function HomePage() {
   return (
     <section>
       <p>Independent goods from thoughtful merchants.</p>
-      <a href="/products/canvas-market-tote">Shop the walking skeleton</a>
+      <Link href="/products/canvas-market-tote" prefetch>Shop the walking skeleton</Link>
     </section>
   );
 }
