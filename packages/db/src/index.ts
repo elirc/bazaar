@@ -18,6 +18,23 @@ export type Product = {
   updatedAt: Date;
 };
 
+export type ProductOption = {
+  id: string;
+  productId: string;
+  name: string;
+  position: number;
+  values: readonly string[];
+};
+
+export type Variant = {
+  id: string;
+  productId: string;
+  sku: string;
+  priceCents: number;
+  /** One selected value per option name, for example `{ Size: "M", Color: "Blue" }`. */
+  selections: Readonly<Record<string, string>>;
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"
@@ -28,6 +45,13 @@ export interface CatalogRepository {
   createProduct(input: CreateProduct): Promise<Product>;
   listProducts(storeId: string): Promise<readonly Product[]>;
   findProductByHandle(storeId: string, handle: string): Promise<Product | undefined>;
+}
+
+export function variantIdentity(selections: Readonly<Record<string, string>>): string {
+  return Object.entries(selections)
+    .sort(([left], [right]) => left.localeCompare(right))
+    .map(([name, value]) => `${name}=${value}`)
+    .join("|");
 }
 
 type IdFactory = () => string;

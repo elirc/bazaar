@@ -25,6 +25,33 @@ model Product {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   store       Store    @relation(fields: [storeId], references: [id])
+  options     ProductOption[]
+  variants    Variant[]
 
   @@unique([storeId, handle])
+}
+
+model ProductOption {
+  id        String   @id @default(cuid())
+  productId String
+  name      String
+  position  Int
+  values    String[]
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, name])
+  @@unique([productId, position])
+}
+
+model Variant {
+  id          String  @id @default(cuid())
+  productId   String
+  sku         String
+  priceCents  Int
+  selections Json
+  identity    String
+  product     Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  @@unique([productId, sku])
+  @@unique([productId, identity])
 }
