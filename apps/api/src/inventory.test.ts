@@ -25,4 +25,13 @@ describe("inventory concurrency", () => {
 
     expect(results.filter(Boolean)).toHaveLength(1);
   });
+
+  it("allows exactly M successes for N concurrent buyers and M stock", async () => {
+    const store = new MemoryInventory({ id: "hot", variantId: "v1", locationId: "l1", onHand: 17, reserved: 0 });
+    const service = new AtomicInventoryService(store);
+    const results = await Promise.all(Array.from({ length: 100 }, () => service.reserve("hot", 1)));
+    expect(results.filter(Boolean)).toHaveLength(17);
+    expect(store.item.reserved).toBe(17);
+    expect(store.item.reserved).toBeLessThanOrEqual(store.item.onHand);
+  });
 });
