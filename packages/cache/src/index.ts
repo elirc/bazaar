@@ -133,3 +133,11 @@ export class InMemoryStaleEntryStore implements StaleEntryStore {
   async get<T>(key: string) { return this.#entries.get(key) as StaleEntry<T> | undefined; }
   async set<T>(key: string, entry: StaleEntry<T>) { this.#entries.set(key, entry); }
 }
+
+export function cacheKey(storeId: string, resource: "product" | "collection", id: string) {
+  return `bazaar:v1:store:${storeId}:${resource}:${id}`;
+}
+
+export function entityTag(resource: "product" | "collection", id: string) {
+  return `${resource}:${id}`;
+}
