@@ -79,6 +79,25 @@ export type CartLine = {
   priceSnapshotCents: number;
 };
 
+export type InventoryItem = {
+  id: string;
+  variantId: string;
+  locationId: string;
+  onHand: number;
+  reserved: number;
+};
+
+export const availableInventory = (item: InventoryItem) => item.onHand - item.reserved;
+
+export type InventoryReservation = {
+  id: string;
+  inventoryItemId: string;
+  cartId: string;
+  quantity: number;
+  status: "active" | "released" | "committed";
+  expiresAt: Date;
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"
