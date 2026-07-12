@@ -22,3 +22,37 @@ export class InMemoryCacheStore implements CacheStore {
   async set<T>(key: string, value: T) { this.#values.set(key, value); }
   async delete(key: string) { this.#values.delete(key); }
 }
+
+export interface CacheTagIndex {
+  attach(key: string, tags: readonly string[]): Promise<void>;
+  keysFor(tag: string): Promise<readonly string[]>;
+  detach(key: string): Promise<void>;
+}
+
+export class InMemoryTagIndex implements CacheTagIndex {
+  readonly #tagKeys = new Map<string, Set<string>>();
+  async attach(key: string, tags: readonly string[]) {
+    for (const tag of tags) {
+      const keys = this.#tagKeys.get(tag) ?? new Set<string>();
+      keys.add(key);
+      this.#tagKeys.set(tag, keys);
+    }
+  }
+  async keysFor(tag: string) { return [...(this.#tagKeys.get(tag) ?? [])]; }
+  async detach(key: string) {
+    for (const keys of this.#tagKeys.values()) keys.delete(key);
+  }
+}
+
+export class TaggedCache {
+  constructor(
+    private readonly cache: ReadThroughCache,
+    private readonly tags: CacheTagIndex,
+  ) {}
+
+  async read<T>(key: string, entryTags: readonly string[], ttlSeconds: number, load: () => Promise<T>) {
+    const value = await this.cache.read(key, ttlSeconds, load);
+    await this.tags.attach(key, entryTags);
+    return value;
+  }
+}
