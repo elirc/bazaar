@@ -1,6 +1,14 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
+import { availabilityCopy } from "../../../src/availability";
+import { AddToCart } from "./add-to-cart";
+
+// Buyers receive static speed while the catalog refreshes within the documented
+// 60-second tolerance. Transactional price truth still belongs to checkout.
+export const revalidate = 60;
+export const dynamicParams = true;
 
 const catalog: readonly StorefrontProduct[] = [
   {
@@ -29,8 +37,18 @@ export default async function ProductPage({
     <article>
       <p>Storefront read model</p>
       <h1>{view.title}</h1>
+      <Image
+        alt={`${view.title} product view`}
+        height={1200}
+        priority
+        sizes="(max-width: 768px) 100vw, 50vw"
+        src="/product-placeholder.svg"
+        width={1200}
+      />
       <p>{view.description}</p>
       <strong>{view.formattedPrice}</strong>
+      <p>{availabilityCopy("in_stock")}</p>
+      <AddToCart handle={view.handle} />
     </article>
   );
 }

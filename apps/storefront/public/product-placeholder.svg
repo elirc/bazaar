@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200" role="img" aria-labelledby="title description">
+  <title id="title">Canvas market tote</title>
+  <desc id="description">Neutral product placeholder with a simple tote silhouette</desc>
+  <rect width="1200" height="1200" fill="#f2eee5"/>
+  <path d="M330 420h540l-45 510H375z" fill="#c8a978"/>
+  <path d="M455 440c0-170 290-170 290 0" fill="none" stroke="#594a36" stroke-width="34"/>
+</svg>
