@@ -4,10 +4,11 @@ export default function StorefrontLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="en">
       <body>
+        <a href="#main-content">Skip to main content</a>
         <header>
           <a href="/">Bazaar</a>
         </header>
-        <main>{children}</main>
+        <main id="main-content" tabIndex={-1}>{children}</main>
       </body>
     </html>
   );

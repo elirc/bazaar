@@ -5,12 +5,12 @@ export type StorefrontProduct = {
   priceCents: number;
 };
 
-export function presentProduct(product: StorefrontProduct) {
+export function presentProduct(product: StorefrontProduct, locale = "en-US", currency = "USD") {
   return {
     ...product,
-    formattedPrice: new Intl.NumberFormat("en-US", {
+    formattedPrice: new Intl.NumberFormat(locale, {
       style: "currency",
-      currency: "USD",
+      currency,
     }).format(product.priceCents / 100),
   };
 }
