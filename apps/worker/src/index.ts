@@ -27,3 +27,4 @@ export { CatalogIndexWorker, ProductIndexer, SearchReconciler, type CatalogProje
 export { ReservationExpiryWorker, type ReservationExpiryPort } from "./reservation-expiry.js";
 export { MerchantWebhookWorker, webhookSignature, type MerchantDelivery, type MerchantDeliveryPort } from "./merchant-webhooks.js";
 export { InventoryReconciler, type InventoryDrift, type InventoryReconciliationPort, type InventoryTruth } from "./inventory-reconciler.js";
+export { GracefulDeployment, type DeploymentPort } from "./deployment.js";
