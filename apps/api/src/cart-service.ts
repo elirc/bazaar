@@ -21,14 +21,16 @@ export function mergeCarts(guest: Cart, customer: Cart): Cart {
 }
 
 export interface VariantPriceReader {
-  findPriceCents(variantId: string): Promise<number>;
+  findPricesCents(variantIds: readonly string[]): Promise<ReadonlyMap<string, number>>;
 }
 
 export async function calculateCartTotals(cart: Cart, prices: VariantPriceReader) {
   let snapshotTotalCents = 0;
   let currentTotalCents = 0;
+  const currentPrices = await prices.findPricesCents([...new Set(cart.lines.map((line) => line.variantId))]);
   for (const line of cart.lines) {
-    const currentPrice = await prices.findPriceCents(line.variantId);
+    const currentPrice = currentPrices.get(line.variantId);
+    if (currentPrice === undefined) throw new Error(`Variant price unavailable: ${line.variantId}`);
     snapshotTotalCents += line.priceSnapshotCents * line.quantity;
     currentTotalCents += currentPrice * line.quantity;
   }

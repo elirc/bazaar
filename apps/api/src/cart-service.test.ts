@@ -12,6 +12,6 @@ describe("cart journey", () => {
   });
   it("reports rather than silently applies current-price drift", async () => {
     const subject = addCartLine(cart("guest"), { id: "g1", variantId: "v1", quantity: 2, priceSnapshotCents: 2400 });
-    await expect(calculateCartTotals(subject, { findPriceCents: async () => 2600 })).resolves.toEqual({ snapshotTotalCents: 4800, currentTotalCents: 5200, priceChanged: true });
+    await expect(calculateCartTotals(subject, { findPricesCents: async () => new Map([["v1", 2600]]) })).resolves.toEqual({ snapshotTotalCents: 4800, currentTotalCents: 5200, priceChanged: true });
   });
 });
