@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import Image from "next/image";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
 import { reconcileAvailability } from "../../../src/availability";
 import { AddToCart } from "./add-to-cart";
+import { ProductMedia } from "./product-media";
 
 // Buyers receive static speed while the catalog refreshes within the documented
 // 60-second tolerance. Transactional price truth still belongs to checkout.
@@ -37,14 +37,7 @@ export default async function ProductPage({
     <article>
       <p>Storefront read model</p>
       <h1>{view.title}</h1>
-      <Image
-        alt={`${view.title} product view`}
-        height={1200}
-        priority
-        sizes="(max-width: 768px) 100vw, 50vw"
-        src="/product-placeholder.svg"
-        width={1200}
-      />
+      <ProductMedia title={view.title} />
       <p>{view.description}</p>
       <strong>{view.formattedPrice}</strong>
       <p data-authoritative="false">{reconcileAvailability("in_stock", undefined).message}</p>
