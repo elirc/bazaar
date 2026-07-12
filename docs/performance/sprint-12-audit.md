@@ -25,3 +25,12 @@ query-count defect because query count is deterministic across hardware.
 3. Add indexes with the expected access predicates documented beside them.
 4. Warm only the traffic-ranked head and assert a >= 90% synthetic hit rate.
 5. Fail CI when deterministic p95 or hit-rate budgets regress.
+
+## Sibling sweep
+
+A source sweep for reads nested inside line/order/collection/search loops found the
+known cart lookup only. Order-list child hydration now has an explicit two-query
+batch port (lines and fulfillments in parallel) plus a reusable read-count budget.
+Collections use one in-memory rule pass over an already-loaded projection; search
+uses the engine's batch projection contract. No latency improvement is claimed
+for those paths until production-cardinality query logs are available.
