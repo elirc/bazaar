@@ -10,4 +10,5 @@ export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, se
 export { MockPaymentProvider, PaymentWebhookHandler, signPaymentWebhook, verifyPaymentWebhook, type PaymentEventPort } from "./payments.js";
 export { transitionOrder } from "./order-state.js";
 export { FulfillmentService, type Fulfillment, type FulfillmentLine, type FulfillmentPort } from "./fulfillment.js";
+export { InventoryEffectService, type InventoryEffect, type InventoryEffectPort } from "./inventory-effects.js";
 export { applyDiscounts, DiscountUsageService, evaluateDiscount, matchesDiscountCondition, revalidateDiscountsAtCheckout, type DiscountCart, type DiscountUsagePort, type PromotionRulePort } from "./discounts.js";
