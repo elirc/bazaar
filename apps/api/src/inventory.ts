@@ -19,3 +19,15 @@ export class NaiveInventoryService {
     return true;
   }
 }
+
+export interface AtomicInventoryPort {
+  tryReserve(itemId: string, quantity: number): Promise<boolean>;
+}
+
+export class AtomicInventoryService {
+  constructor(private readonly inventory: AtomicInventoryPort) {}
+  reserve(itemId: string, quantity: number) {
+    if (!Number.isInteger(quantity) || quantity <= 0) throw new Error("quantity must be a positive integer");
+    return this.inventory.tryReserve(itemId, quantity);
+  }
+}
