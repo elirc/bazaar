@@ -41,6 +41,29 @@ export function toEngineDocument(document: SearchDocument): EngineDocument {
   };
 }
 
+export type EngineSearchRequest = {
+  query: string;
+  collections?: readonly string[];
+  optionValues?: readonly string[];
+  available?: boolean;
+  sort?: "relevance" | "price_asc" | "price_desc" | "newest";
+  page: number;
+  perPage: number;
+};
+export type EngineSearchResponse = {
+  hits: readonly EngineDocument[];
+  found: number;
+  facets: Readonly<Record<string, Readonly<Record<string, number>>>>;
+};
+export interface SearchEnginePort { search(request: EngineSearchRequest): Promise<EngineSearchResponse>; }
+
+export class EngineSearchService {
+  constructor(private readonly engine: SearchEnginePort) {}
+  search(request: EngineSearchRequest) {
+    return this.engine.search({ ...request, query: request.query.trim() || "*" });
+  }
+}
+
 export type BrowseFilter =
   | { op: "price_between"; minimumCents: number; maximumCents: number }
   | { op: "collection_is"; handle: string }
