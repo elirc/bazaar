@@ -1,0 +1,47 @@
+import { productRows, type AdminProduct } from "../src/catalog-admin";
+
+// Merchant decisions cannot tolerate a stale write-after-read, so this route is
+// intentionally dynamic even though the buyer-facing product page can be static.
+export const dynamic = "force-dynamic";
+
+const seedProducts: AdminProduct[] = [
+  { id: "p_demo", title: "Canvas Market Tote", status: "active", priceCents: 2400 },
+];
+
+export default function CatalogPage() {
+  return (
+    <section>
+      <h1>Catalog</h1>
+      <p>Changes here read directly from catalog truth and bypass storefront caches.</p>
+      <form>
+        <label>
+          Product title
+          <input name="title" required />
+        </label>
+        <label>
+          Price in cents
+          <input name="priceCents" min="0" step="1" type="number" required />
+        </label>
+        <button type="submit">Create draft</button>
+      </form>
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Status</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          {productRows(seedProducts).map((product) => (
+            <tr key={product.id}>
+              <td>{product.title}</td>
+              <td>{product.status}</td>
+              <td>{product.formattedPrice}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </section>
+  );
+}
