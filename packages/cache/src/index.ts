@@ -168,3 +168,4 @@ export class CacheMetrics implements CacheMetricSink {
 
 export { cachePolicy, normalizedQueryKey, type CachePath } from "./policy.js";
 export { HotSetWarmer, type HotResource } from "./warming.js";
+export { TrendWarmer } from "./trend-warming.js";
