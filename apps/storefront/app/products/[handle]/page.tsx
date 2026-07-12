@@ -2,6 +2,11 @@ import { notFound } from "next/navigation";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
 
+// Buyers receive static speed while the catalog refreshes within the documented
+// 60-second tolerance. Transactional price truth still belongs to checkout.
+export const revalidate = 60;
+export const dynamicParams = true;
+
 const catalog: readonly StorefrontProduct[] = [
   {
     handle: "canvas-market-tote",
