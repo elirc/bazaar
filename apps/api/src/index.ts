@@ -4,3 +4,4 @@ export { mergeVariantMatrix } from "./catalog/variants.js";
 export { matchesSmartRule, productsInCollection } from "./catalog/collections.js";
 export { SearchService } from "./search-service.js";
 export { addCartLine, updateCartLine, mergeCarts, calculateCartTotals, type VariantPriceReader } from "./cart-service.js";
+export { CatalogPublisher, type StorefrontRevalidator } from "./catalog-publisher.js";
