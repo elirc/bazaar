@@ -53,3 +53,16 @@ export class DiscountUsageService {
     return this.usage.tryClaim(rule.id, customerId);
   }
 }
+
+export interface PromotionRulePort {
+  load(ruleIds: readonly string[]): Promise<readonly PriceRule[]>;
+}
+
+export async function revalidateDiscountsAtCheckout(
+  appliedRuleIds: readonly string[],
+  cart: DiscountCart,
+  rules: PromotionRulePort,
+  now = new Date(),
+) {
+  return applyDiscounts(await rules.load(appliedRuleIds), cart, now);
+}
