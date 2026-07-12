@@ -7,6 +7,24 @@ export interface ChargePort {
   charge(input: { orderId: string; amountCents: number; currency: string; idempotencyKey?: string }): Promise<{ chargeId: string; status: "succeeded" | "declined" }>;
 }
 
+export interface CheckoutValidationPort {
+  currentPriceCents(variantId: string): Promise<number>;
+  reservationActive(cartId: string, variantId: string, quantity: number): Promise<boolean>;
+}
+
+export async function revalidateCheckout(cart: Cart, validation: CheckoutValidationPort) {
+  let totalCents = 0;
+  for (const line of cart.lines) {
+    const currentPrice = await validation.currentPriceCents(line.variantId);
+    if (currentPrice !== line.priceSnapshotCents) throw new Error(`Price changed for ${line.variantId}`);
+    if (!(await validation.reservationActive(cart.id, line.variantId, line.quantity))) {
+      throw new Error(`Inventory reservation missing for ${line.variantId}`);
+    }
+    totalCents += currentPrice * line.quantity;
+  }
+  return { totalCents, currency: "USD" as const };
+}
+
 export class NaiveCheckoutService {
   constructor(
     private readonly orders: CheckoutOrderPort,

@@ -6,4 +6,4 @@ export { SearchService } from "./search-service.js";
 export { addCartLine, updateCartLine, mergeCarts, calculateCartTotals, type VariantPriceReader } from "./cart-service.js";
 export { CatalogPublisher, type StorefrontRevalidator } from "./catalog-publisher.js";
 export { allocateAcrossLocations, AtomicInventoryService, NaiveInventoryService, ReservationService, type AtomicInventoryPort, type InventoryReadWritePort, type ReservationPort } from "./inventory.js";
-export { IdempotentCheckoutService, NaiveCheckoutService, type ChargePort, type CheckoutOrderPort, type IdempotentOrderPort } from "./checkout.js";
+export { IdempotentCheckoutService, NaiveCheckoutService, revalidateCheckout, type ChargePort, type CheckoutOrderPort, type CheckoutValidationPort, type IdempotentOrderPort } from "./checkout.js";
