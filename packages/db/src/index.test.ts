@@ -20,4 +20,19 @@ describe("catalog repository", () => {
       title: "Canvas Tote",
     });
   });
+
+  it("rejects duplicate product handles within one store", async () => {
+    let sequence = 0;
+    const repository = new InMemoryCatalogRepository(() => `product-${++sequence}`);
+    await repository.createStore({ id: "store-1", name: "Bazaar Demo", handle: "demo" });
+    const input = {
+      storeId: "store-1",
+      title: "Canvas Tote",
+      handle: "canvas-tote",
+      description: "Market-ready",
+      priceCents: 2400,
+    };
+    await repository.createProduct(input);
+    await expect(repository.createProduct(input)).rejects.toThrow("already exists");
+  });
 });
