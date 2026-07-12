@@ -53,6 +53,8 @@ model Order {
   lines          OrderLine[]
   payments       Payment[]
   fulfillments   Fulfillment[]
+
+  @@index([cartId, status])
 }
 
 model OrderLine {
@@ -63,6 +65,8 @@ model OrderLine {
   unitPriceCents Int
   order          Order @relation(fields: [orderId], references: [id])
   fulfillmentLines FulfillmentLine[]
+
+  @@index([orderId, variantId])
 }
 
 model Fulfillment {
@@ -74,6 +78,8 @@ model Fulfillment {
   createdAt      DateTime @default(now())
   order          Order @relation(fields: [orderId], references: [id])
   lines          FulfillmentLine[]
+
+  @@index([orderId, createdAt(sort: Desc)])
 }
 
 model FulfillmentLine {
@@ -137,6 +143,7 @@ model Product {
   collections ProductsOnCollections[]
 
   @@unique([storeId, handle])
+  @@index([storeId, status, createdAt(sort: Desc)])
 }
 
 model ProductMedia {
