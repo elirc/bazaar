@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { browseCatalog, searchCatalog, sortAndPage, type SearchDocument } from "./index.js";
+import { browseCatalog, EngineSearchService, ResilientSearchService, searchCatalog, sortAndPage, toEngineDocument, type SearchDocument } from "./index.js";
 
 const documents: SearchDocument[] = [
   { id: "1", title: "Canvas Tote", description: "Market bag", priceCents: 2400, options: { Color: ["Natural"] }, collectionHandles: ["bags"], available: true, createdAt: new Date("2026-01-01") },
@@ -19,5 +19,17 @@ describe("catalog search", () => {
   it("sorts price with a stable cursor", () => {
     const hits = searchCatalog(documents, "");
     expect(sortAndPage(hits, "price_asc", undefined, 1)).toMatchObject({ items: [{ id: "2" }], nextCursor: "2" });
+  });
+
+  it("maps facetable engine fields without changing catalog truth", () => {
+    expect(toEngineDocument(documents[0]!)).toMatchObject({ collections: ["bags"], optionValues: ["Color:Natural"], available: true });
+  });
+
+  it("falls back to FTS when the engine is unavailable", async () => {
+    const engine = new EngineSearchService({ search: async () => { throw new Error("engine down"); } });
+    const service = new ResilientSearchService(engine, { search: async (query) => searchCatalog(documents, query) });
+    const result = await service.search({ query: "canvas", page: 1, perPage: 20 });
+    expect(result.degraded).toBe(true);
+    if (result.degraded) expect(result.fallback[0]?.id).toBe("1");
   });
 });
