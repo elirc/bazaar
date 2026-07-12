@@ -98,6 +98,26 @@ export type InventoryReservation = {
   expiresAt: Date;
 };
 
+export type OrderStatus = "pending" | "paid" | "failed" | "cancelled" | "fulfilled";
+export type Order = {
+  id: string;
+  cartId: string;
+  idempotencyKey: string;
+  status: OrderStatus;
+  totalCents: number;
+  currency: string;
+  lines: readonly { variantId: string; quantity: number; unitPriceCents: number }[];
+};
+
+export type Payment = {
+  id: string;
+  orderId: string;
+  providerChargeId: string;
+  idempotencyKey: string;
+  amountCents: number;
+  status: "pending" | "succeeded" | "declined" | "refunded";
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"
