@@ -13,3 +13,5 @@ pr-*.md
 comment-*.md
 debate-*.md
 squash-*.md
+.course-ops/
+*.tsbuildinfo

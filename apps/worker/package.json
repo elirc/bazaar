@@ -1,0 +1,14 @@
+{
+  "name": "@bazaar/worker",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": { "@bazaar/shared": "workspace:*" },
+  "devDependencies": { "typescript": "catalog:", "vitest": "catalog:" }
+}
