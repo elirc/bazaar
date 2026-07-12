@@ -1,6 +1,6 @@
 import type { Cart, Order } from "@bazaar/db";
-import { describe, expect, it } from "vitest";
-import { IdempotentCheckoutService, type ChargePort, type CheckoutOrderPort, type IdempotentOrderPort } from "./checkout.js";
+import { describe, expect, it, vi } from "vitest";
+import { IdempotentCheckoutService, revalidateCheckout, settleCheckout, type ChargePort, type CheckoutOrderPort, type IdempotentOrderPort } from "./checkout.js";
 
 class MemoryCheckout implements CheckoutOrderPort, IdempotentOrderPort, ChargePort {
   orders: Order[] = [];
@@ -24,5 +24,24 @@ describe("checkout idempotency", () => {
     await Promise.all([checkout.checkout(cart, "attempt-1"), checkout.checkout(cart, "attempt-1")]);
     expect(memory.orders).toHaveLength(1);
     expect(memory.charges).toHaveLength(1);
+  });
+
+  it("revalidates price and reservation before money", async () => {
+    await expect(revalidateCheckout(cart, {
+      currentPriceCents: async () => 2400,
+      reservationActive: async () => true,
+    })).resolves.toEqual({ totalCents: 2400, currency: "USD" });
+    await expect(revalidateCheckout(cart, {
+      currentPriceCents: async () => 2600,
+      reservationActive: async () => true,
+    })).rejects.toThrow("Price changed");
+  });
+
+  it("decline fails the order, releases stock, and leaves cart recovery to the caller", async () => {
+    const recovery = { markPaid: vi.fn(), markFailed: vi.fn(async () => undefined), releaseReservations: vi.fn(async () => undefined) };
+    const order: Order = { id: "o1", cartId: "cart", idempotencyKey: "k", status: "pending", totalCents: 2400, currency: "USD", lines: [] };
+    await expect(settleCheckout(order, { status: "declined" }, recovery)).resolves.toBe("failed");
+    expect(recovery.markFailed).toHaveBeenCalledWith("o1");
+    expect(recovery.releaseReservations).toHaveBeenCalledWith("cart");
   });
 });
