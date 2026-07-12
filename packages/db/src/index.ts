@@ -35,6 +35,23 @@ export type Variant = {
   selections: Readonly<Record<string, string>>;
 };
 
+export type SmartCollectionRule =
+  | { op: "all"; rules: readonly SmartCollectionRule[] }
+  | { op: "any"; rules: readonly SmartCollectionRule[] }
+  | { op: "title_contains"; value: string }
+  | { op: "price_between"; minimumCents: number; maximumCents: number }
+  | { op: "status_is"; value: ProductStatus };
+
+export type Collection = {
+  id: string;
+  storeId: string;
+  title: string;
+  handle: string;
+  kind: "manual" | "smart";
+  productIds: readonly string[];
+  rule?: SmartCollectionRule;
+};
+
 export type CreateProduct = Pick<
   Product,
   "storeId" | "title" | "handle" | "description" | "priceCents"
