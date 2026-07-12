@@ -11,6 +11,9 @@ class MemoryInventory implements InventoryReadWritePort, AtomicInventoryPort {
     this.item = { ...this.item, reserved: this.item.reserved + quantity };
     return true;
   }
+  async release(_itemId: string, quantity: number) {
+    this.item = { ...this.item, reserved: this.item.reserved - quantity };
+  }
 }
 
 describe("inventory concurrency", () => {
