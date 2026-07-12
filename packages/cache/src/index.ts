@@ -165,3 +165,5 @@ export class CacheMetrics implements CacheMetricSink {
     };
   }
 }
+
+export { cachePolicy, normalizedQueryKey, type CachePath } from "./policy.js";
