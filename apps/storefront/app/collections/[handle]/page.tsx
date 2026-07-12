@@ -15,11 +15,11 @@ export default async function CollectionPage({
   const { handle } = await params;
   const result = paginateProducts(demoCollectionProducts, 1, 12);
   return (
-    <section>
-      <h1>{handle.replaceAll("-", " ")}</h1>
+    <section aria-labelledby="collection-title">
+      <h1 id="collection-title">{handle.replaceAll("-", " ")}</h1>
       <p>Page {result.page} of {result.pageCount}</p>
       <ul>{result.products.map((product) => <li key={product.handle}><a href={`/products/${product.handle}`}>{product.title}</a></li>)}</ul>
-      {result.pageCount > 1 ? <a href={`/collections/${handle}/page/2`}>Next page</a> : null}
+      {result.pageCount > 1 ? <nav aria-label="Collection pagination"><a href={`/collections/${handle}/page/2`} rel="next">Next page</a></nav> : null}
     </section>
   );
 }

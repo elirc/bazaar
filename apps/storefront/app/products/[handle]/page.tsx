@@ -34,12 +34,13 @@ export default async function ProductPage({
   const view = presentProduct(product);
 
   return (
-    <article>
+    <article aria-labelledby="product-title">
+      <nav aria-label="Breadcrumb"><a href="/">Home</a> / <span aria-current="page">{view.title}</span></nav>
       <p>Storefront read model</p>
-      <h1>{view.title}</h1>
+      <h1 id="product-title">{view.title}</h1>
       <ProductMedia title={view.title} />
       <p>{view.description}</p>
-      <strong>{view.formattedPrice}</strong>
+      <p><strong>{view.formattedPrice}</strong></p>
       <p data-authoritative="false">{reconcileAvailability("in_stock", undefined).message}</p>
       <AddToCart handle={view.handle} />
     </article>
