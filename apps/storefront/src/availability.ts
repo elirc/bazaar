@@ -7,3 +7,9 @@ export function availabilityCopy(hint: AvailabilityHint): string {
     case "out_of_stock": return "Sold out";
   }
 }
+
+export function reconcileAvailability(cachedHint: AvailabilityHint, reservationAccepted: boolean | undefined) {
+  if (reservationAccepted === false) return { authoritative: true, message: "Sold out while you were shopping" };
+  if (reservationAccepted === true) return { authoritative: true, message: "Reserved for checkout" };
+  return { authoritative: false, message: availabilityCopy(cachedHint) };
+}

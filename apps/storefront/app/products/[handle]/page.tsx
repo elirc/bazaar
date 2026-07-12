@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 import { presentProduct, type StorefrontProduct } from "../../../src/product-view";
-import { availabilityCopy } from "../../../src/availability";
+import { reconcileAvailability } from "../../../src/availability";
 import { AddToCart } from "./add-to-cart";
 
 // Buyers receive static speed while the catalog refreshes within the documented
@@ -47,7 +47,7 @@ export default async function ProductPage({
       />
       <p>{view.description}</p>
       <strong>{view.formattedPrice}</strong>
-      <p>{availabilityCopy("in_stock")}</p>
+      <p data-authoritative="false">{reconcileAvailability("in_stock", undefined).message}</p>
       <AddToCart handle={view.handle} />
     </article>
   );
