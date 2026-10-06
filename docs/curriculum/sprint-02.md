@@ -38,3 +38,8 @@ real entity, not as a position inside a document.
 3. Add a destructive option removal policy that refuses deletion when a variant
    is referenced by an order.
 4. Scale the seed to 50,000 products and measure live smart-collection evaluation.
+
+## Ground truth
+
+- `mergeVariantMatrix` and its preservation test: `apps/api/src/catalog/variants.ts` / `variants.test.ts`; the admin matrix UI logic is `apps/admin/src/variant-matrix.ts`; the smart-collection predicate AST is `apps/admin/src/collection-rules.ts`.
+- **Check**: `pnpm --filter @bazaar/api test variants` — exercise 1's survival prediction is exactly what the preservation test pins down.

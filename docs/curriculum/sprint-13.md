@@ -32,3 +32,8 @@ with induced provider latency. Attach topology and timestamps to every graph.
 2. Race anonymous buyers against a one-per-customer promotion.
 3. Tamper a cart snapshot to one cent and trace the rejection.
 4. Find the concurrency level where throughput degrades while correctness holds.
+
+## Ground truth
+
+- The two 10k correctness proofs: `apps/api/src/flash-sale.test.ts` (inventory) and the idempotency cases in `checkout.test.ts`; hostile-input handling of exercises 1 and 3: `apps/api/src/storefront-security.ts` / `storefront-security.test.ts`; the load profile: `performance/flash-sale.js`; drill lab on branch `lab/sprint-13`.
+- **Check**: `pnpm --filter @bazaar/api test flash-sale storefront-security` — every exercise's rejection path has a named test here.

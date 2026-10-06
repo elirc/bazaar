@@ -24,3 +24,8 @@ single-flight for safe expiry, and SWR for buyer latency.
 2. Remove single-flight and count origin loads for 100 concurrent misses.
 3. Make refresh fail during SWR and define the stale/error policy.
 4. Add a collection dependency and prove one product edit invalidates both pages.
+
+## Ground truth
+
+- Tags, single-flight, and SWR all live in `packages/cache/src/index.ts` and `policy.ts`, asserted in `packages/cache/src/index.test.ts`; the decision record is ADR-0006.
+- **Check**: `pnpm --filter @bazaar/cache test` — exercises 1, 2 and 4 each have a corresponding test to break and restore (stale-price, single-flight load count, tag fan-out).

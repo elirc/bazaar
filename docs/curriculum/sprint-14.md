@@ -24,3 +24,8 @@ Base currency remains available for settlement and reporting.
 2. Format 123456 minor EUR units in en-US and fr-FR without changing value.
 3. Prove a displayed JPY quote equals provider input after zero-decimal rounding.
 4. Validate product JSON-LD and locale alternates with external webmaster tools.
+
+## Ground truth
+
+- Axe gate and keyboard flows: `apps/storefront/src/a11y.test.tsx`; locale/formatting: `i18n.ts`; money conversion and zero-decimal rounding of exercise 3: `apps/api/src/currency-checkout.ts` / `currency-checkout.test.ts`; JSON-LD and hreflang: `apps/storefront/src/seo.ts` / `seo.test.ts`.
+- **Check**: `pnpm --filter @bazaar/storefront test` covers exercises 1, 2 and the serializer half of 4; exercise 3 is `pnpm --filter @bazaar/api test currency-checkout`.

@@ -31,3 +31,8 @@ truth remains mandatory for buyer-specific and transactional routes.
 
 Rendering is a correctness choice as well as a speed choice. Cache the shared read
 surface within a stated tolerance; never let that display cache authorize money or stock.
+
+## Ground truth
+
+- `renderingPolicies`: `apps/storefront/src/rendering-policy.ts`, asserted in `rendering-policy.test.ts`; the strategy rationale is `docs/rendering-strategy.md` and ADR-0004.
+- **Check**: `pnpm --filter @bazaar/storefront test rendering-policy` — exercise 1's classifications should each map to one policy entry in that file.

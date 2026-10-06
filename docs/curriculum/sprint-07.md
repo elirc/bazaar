@@ -25,3 +25,9 @@ Reservations protect the cart-to-checkout gap; cached availability only informs.
 2. Run 10,000 buyers against 100 units and measure contention.
 3. Crash between atomic reserve and reservation-record creation; design recovery.
 4. Compare most-stock, nearest-location, and single-location allocation policies.
+
+## Ground truth
+
+- `AtomicInventoryService` and `ReservationService`: `apps/api/src/inventory.ts`, asserted in `inventory.test.ts`; the 10,000-attempt contention drill of exercise 2 is `apps/api/src/flash-sale.test.ts` ("sells exactly 100 units across 10,000 concurrent attempts").
+- The naïve service for exercise 1 is on branch `lab/sprint-07` (lab commit `ecc89e4`; the fix merged as `7276213`, PR #35). Exercise 3's crash window is the compensation test in `flash-sale.test.ts` ("compensates a stock claim when reservation persistence fails").
+- **Check**: `pnpm --filter @bazaar/api test flash-sale` passes on `main` and fails on the lab branch's naïve service.

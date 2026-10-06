@@ -101,8 +101,17 @@ Store ─┬─ Product ─┬─ Variant (sku, price, options) ── Inventory
 | 14 | Storefront polish: a11y, i18n, SEO | Full | M/L | Accessibility, multi-currency/locale, SEO |
 | 15 | Production readiness → `v1.0.0` | Full | L | Cache/inventory observability, Black-Friday drill, runbooks |
 
-## 7. Open questions (decide before Sprint 1)
+## 7. Open questions — all resolved during the course
 
-1. Typesense (self-host container) vs Meilisearch vs Elastic for S9? (Spec assumes Typesense: light, fast, good DX.)
-2. CDN layer in prod (Vercel/Cloudflare) or model it with Redis only? (Spec assumes ISR + Redis, CDN documented.)
-3. Multi-location inventory in scope or single-location for v1? (Spec: model per-location, default single.)
+Kept as written for the record; how each landed:
+
+1. Typesense vs Meilisearch vs Elastic for S9? → **Typesense**, chosen in
+   [ADR-0009](docs/adr/0009-adopt-typesense.md) as the lightest engine clearing
+   the measured requirements; FTS remains the degradation baseline.
+2. CDN layer in prod or Redis-only model? → **ISR + Redis, layered only when
+   measured**, per [ADR-0002](docs/adr/0002-caching-roadmap.md): each cache
+   layer arrives with a baseline, a staleness tolerance, and a removal criterion.
+3. Multi-location inventory? → **Modeled per-location, single by default**, as
+   specced: `allocateAcrossLocations` in `apps/api/src/inventory.ts` implements
+   most-stock-first allocation, exercised by Sprint 7's allocation-policy
+   exercise.

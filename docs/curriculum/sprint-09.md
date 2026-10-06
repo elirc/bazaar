@@ -24,3 +24,8 @@ Choose the lightest engine that clears measured requirements.
 2. Make the engine throw and confirm FTS results remain available.
 3. Add a synonym and pinned product fixture.
 4. Run a real Typesense lab before making latency claims.
+
+## Ground truth
+
+- Engine contract and FTS fallback: `packages/search/src/index.ts`; API seam: `apps/api/src/search-service.ts`; the event indexer and reconciler of exercise 1: `apps/worker/src/catalog-indexer.ts` / `catalog-indexer.test.ts`; decision record ADR-0009.
+- **Check**: `pnpm --filter @bazaar/worker test catalog-indexer`; the drift-and-reconcile lab is on branch `lab/sprint-09`.

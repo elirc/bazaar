@@ -25,3 +25,8 @@ adoption trigger.
 2. Search misspellings and quantify zero-result queries.
 3. Add a new option facet and prove counts respect every other active filter.
 4. Compare cursor results while inserting a product between requests.
+
+## Ground truth
+
+- FTS core and filter/facet AST: `packages/search/src/index.ts` with fixtures in `index.test.ts`; engine-adoption triggers are recorded in ADR-0005 and revisited by ADR-0009.
+- **Check**: `pnpm --filter @bazaar/search test`; the lab for this sprint lives on branch `lab/sprint-04`.

@@ -24,3 +24,8 @@ exactly what “same retry” means and travels through every money boundary.
 2. Replay a valid webhook 100 times and prove one state transition.
 3. Tamper with price and remove a reservation before checkout.
 4. Add an illegal paid-to-failed transition and confirm the table rejects it.
+
+## Ground truth
+
+- Checkout and idempotency: `apps/api/src/checkout.ts` / `checkout.test.ts`; provider adapter: `apps/api/src/payments.ts` / `payments.test.ts`; decision record ADR-0008.
+- **Check**: `pnpm --filter @bazaar/api test checkout payments` — exercise 2 is the "verifies and deduplicates webhook replay" test in `payments.test.ts`; exercise 4's illegal transition is rejected by the table in `order-state.ts`.

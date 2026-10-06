@@ -24,3 +24,8 @@ floor as the resolved policy, harvested through Sprint 13's abuse probe.
 2. Race 200 buyers against a 100-use code.
 3. Reorder fixed/percentage rules and explain the different result.
 4. Build the Sprint 13 stacking-abuse input without implementing the fix.
+
+## Ground truth
+
+- Condition/value AST and evaluation: `apps/api/src/discounts.ts` / `discounts.test.ts`; decision record ADR-0010; the stacking flaw deliberately left open here is harvested in Sprint 13's abuse probe.
+- **Check**: `pnpm --filter @bazaar/api test discounts` — exercise 3's ordering difference is a characterization test there, not an opinion.

@@ -33,3 +33,8 @@ Do not compare numbers from different hardware as if they were controlled data.
 2. Change the hot-set limit and graph warm duration against first-minute hit rate.
 3. Add production-cardinality `EXPLAIN (ANALYZE, BUFFERS)` evidence.
 4. Break the CI hit-rate fixture intentionally and inspect the failed budget.
+
+## Ground truth
+
+- The N+1 fix of exercise 1: `apps/api/src/batched-reads.ts`; warming and per-path policy: `packages/cache/src/warming.ts` and `policy.ts`; the smoke profile: `performance/cache-smoke.js`; the CI budget: `scripts/cache-performance-gate.mjs` (run it with `pnpm performance:gate`).
+- **Check**: `pnpm performance:gate` is exercise 4's failed-budget inspection — break the fixture, read the gate output, restore it.

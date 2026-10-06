@@ -39,3 +39,8 @@ The reusable lesson is: split systems by requirements, not merely by their data.
    engineer could introduce by caching the now-shared admin query.
 4. Run `pnpm gate`, then replace the in-memory repository with a deliberately slow
    fake and observe which tests remain deterministic.
+
+## Ground truth
+
+- `CatalogService.listForAdmin` / `readForStorefront`: `apps/api/src/catalog-service.ts`; the two apps are `apps/admin` and `apps/storefront`.
+- **Check**: `pnpm gate` runs the full infrastructure-free suite; exercise 2's draft-visibility claim is asserted in `apps/api/src/app.test.ts`.

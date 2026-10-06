@@ -25,3 +25,8 @@ guest cookie carries only the durable cart ID.
 2. Run k6 cold then warm and add a trustworthy cache-status signal.
 3. Expire a hot key under concurrency and count loader calls.
 4. Explain why cart totals can display a snapshot while checkout must revalidate.
+
+## Ground truth
+
+- Cart core and journey tests: `apps/api/src/cart-service.ts` / `cart-service.test.ts`; cache-aside port: `packages/cache/src/index.ts`; the k6 baseline profile is `scripts/k6/storefront-baseline.js`.
+- **Check**: `pnpm --filter @bazaar/api test cart-service` — exercise 1's merge policy is pinned by the guest/customer merge tests there.
